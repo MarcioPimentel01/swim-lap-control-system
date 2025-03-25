@@ -50,3 +50,14 @@ The system supports both local control and remote access via Wi-Fi or Bluetooth,
 - IP65+ enclosures for Raspberry Pi and touchpads
 - Waterproof casings for poolside display components
 - Anti-condensation measures for display visibility
+
+## Dependencies
+
+* `express` A fast, minimal web server framework for Node.js.
+You use it to build APIs, serve HTML pages, handle routes, etc.
+* `socket.io` Enables real-time, bi-directional communication between client and server via WebSockets (or fallback to long-polling).
+Perfect for live chat, real-time notifications, or live sensor data updates.
+* `onoff` Lets you control GPIO (General Purpose Input/Output) pins on a Raspberry Pi.
+You can turn LEDs on/off, detect button presses, etc.
+* `johnny-five` A JavaScript robotics and IoT library.
+Works with boards like Arduino and also supports Raspberry Pi (through a plugin like Raspi IO).
