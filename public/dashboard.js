@@ -31,6 +31,18 @@ startButton.addEventListener("click", () => {
         return;
     }
     console.log("✅ Valid pool size was added", poolSize);
+
+
+    //! remove and add values after function validation
+    
+    const setupSection = document.querySelector(".setup-pool-size")
+    setupSection.classList.add("hidden");
+    console.log("👋 Hiding setup section:", setupSection);
+
+    const lapDisplay = document.querySelector(".lap-display");
+    lapDisplay.classList.remove("hidden");
+    console.log("👋 Showing lap display:", lapDisplay);
+    
 });
 
 
