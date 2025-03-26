@@ -1,6 +1,8 @@
-const socket = io();
+const socket = io(); //! 👈 connects to the server
 
-socket.on("lapUpdate", (data) => {
-    document.getElementById("lap").innerText = `Lap ${data.lap}: ${data.time}`;
-    console.log("got lap Update", data)
-})
+const poolSizeInput = document.getElementById("pool-size");
+const start = document.querySelector(".start");
+const lapDisplay = document.querySelector(".lap-display");
+const lapCounter = document.querySelector(".lap-counter");
+const lapTime = document.querySelector(".lap-time");
+

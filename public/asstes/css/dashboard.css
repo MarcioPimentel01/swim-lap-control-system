@@ -1,0 +1,98 @@
+/* 
+Project Name: Swimming time lap control system
+Author: Marcio Pimentel
+Date: 2025-03-24
+Description: 
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --dk-bg-color: rgb(39, 55, 77);
+    --dk-main-color: rgb(82, 109, 130);
+    --dk-second-main-color: rgb(157, 178, 191);
+    --dk-text-color: rgb(221, 230, 237);
+}
+
+body {
+    background-color: var(--dk-bg-color);
+    font-family: "Roboto", sans-serif;
+    color: var(--dk-text-color);
+    text-align: center;
+}
+
+header {
+    /* border: 2px solid var(--dk-second-main-color); */
+    width: 100%;
+    padding: 2rem 10%;
+    background: var(--dk-main-color);
+    filter: drop-shadow(10px 5px 5px rgba(157, 178, 191, 0.5));
+}
+
+main {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin: 3rem;
+}
+
+.setup-pool-size {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    /* border: 2px solid white; */
+    border-radius: 25px;
+    background: var(--dk-bg-color);
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    min-height: 250px;
+    box-shadow: rgba(82, 109, 130, 0.9) 0px 30px 50px -12px inset, rgba(0, 0, 0, 1) 0px 18px 26px -18px inset;
+}
+
+.label-pool-size {
+    font-weight: 1000;
+    font-size: 2rem;
+    text-align: center;
+    margin: 22px auto;
+}
+
+.input-pool-size {
+    width: 220px;
+    height: 45px;
+    margin: 17px auto;
+    border: none;
+    outline: none;
+    padding: 0 6px;
+    border-radius: 6px;
+    color: var(--dk-text-color);
+    font-size: 0.9rem;
+    font-weight: 700;
+    background-color: transparent;
+    box-shadow: 3px 3px 5px, -1px -1px 6px rgba(255, 255, 255, 0.4);
+}
+
+.start {
+    width: 120px;
+    height: 50px;
+    margin: 25px auto;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 7px;
+    cursor: pointer;
+    border: none;
+    background-color: var(--dk-main-color);
+    color: var(--dk-second-main-color);
+    box-shadow: 3px 3px ;
+}
+
+.start:hover {
+    transform: translateY(.22em);
+    transition: transform 100ms ease;
+}
