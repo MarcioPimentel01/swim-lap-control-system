@@ -78,7 +78,7 @@ main {
     box-shadow: 3px 3px 5px, -1px -1px 6px rgba(255, 255, 255, 0.4);
 }
 
-.start {
+.start-button {
     width: 120px;
     height: 50px;
     margin: 25px auto;
