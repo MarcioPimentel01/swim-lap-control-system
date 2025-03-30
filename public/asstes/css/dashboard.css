@@ -78,6 +78,38 @@ main {
     box-shadow: 3px 3px 5px, -1px -1px 6px rgba(255, 255, 255, 0.4);
 }
 
+.setup-lap-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    min-width: 300px;
+    /* border: 2px solid white; */
+    border-radius: 25px;
+    background: var(--dk-bg-color);
+    width: 100%;
+    height: 100%;
+    max-width: 300px;
+    min-height: 265px;
+    box-shadow: rgba(82, 109, 130, 0.9) 0px 30px 50px -12px inset, rgba(0, 0, 0, 1) 0px 18px 26px -18px inset;
+}
+
+
+.lap-counter {
+    margin-top: 20px;
+    font-size: 2.5rem;
+    font-weight: 1000;
+}
+
+.lap-time {
+    margin-top: 45px;
+    font-size: 3rem;
+    font-weight: 700;
+}
 .start-button {
     width: 120px;
     height: 50px;

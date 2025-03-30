@@ -26,11 +26,15 @@ console.log("Logs every last partial", displayLastPartial);
 const displayLastLap = document.querySelector(".display-last-lap");
 console.log("Display always the last lap", displayLastLap);
 
+const displayAverage = document.querySelector(".display-average")
+console.log("Display the average of all laps inside the lapTimes[]", displayAverage)
+
 //! lap simulation
 
 let lap = 0;
 let lapIntervalHalf = null;
 let lapIntervalFinal = null;
+let fastestLap = null;
 
 //! storing the laps on local (in-memory)
 
@@ -64,7 +68,7 @@ startButton.addEventListener("click", () => {
     console.log("👋 Showing lap display:", lapDisplay);
 
     lapsSimulation();
-    
+
 });
 
 stopSession.addEventListener("click", () => {
@@ -89,20 +93,26 @@ function lapsSimulation() {
     }, 2000);
 
 
-
-
     lapIntervalFinal = setInterval(() => {
         lap++;
-        const fakeTime = generateFakeTime();
-        lapTimes.push(fakeTime);
+        const raw = generateFakeTime();
+        const ms = timeToMs(raw);
+        const lapObj = {raw, ms};
+        lapTimes.push(lapObj);
         console.log("Fake lap times pushed to the array", lapTimes);
 
         lapCounter.textContent = `Lap ${lap}`
-        lapTime.textContent = fakeTime;
+        lapTime.textContent = lapObj.raw;
+        displayLastLap.textContent = lapTimes[lapTimes.length - 1].raw;
 
-        displayLastLap.textContent = lapTimes[lapTimes.length - 1];
+        lapAverage();
 
-        console.log(`🏁 Lap ${lap} - Time: ${fakeTime}`);
+        if (fastestLap === null || ms < fastestLap) {
+            fastestLap = ms
+            document.querySelector(".display-record").textContent = raw
+        }
+
+        console.log(`🏁 Lap ${lap} - Time: ${raw}`);
     }, 4000);
 
     stopSession.addEventListener("click", () => {
@@ -118,6 +128,8 @@ function generateFakeTime() {
     const ms = Math.floor(Math.random() * 100);
 
     return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}.${String(ms).padStart(2, "0")}`;
+
+
 };
 
 
@@ -139,4 +151,35 @@ function timeToMs(timeString) {
 
     const totalMs = (Number(min) * 60 * 1000) + (Number(sec) * 1000) + Number(ms);
     console.log("Total in ms", totalMs);
+
+    return totalMs;
 };
+
+function msToTime(ms) {
+    const min = Math.floor(ms / 60000);
+    const sec = Math.floor((ms % 60000) / 1000);
+    const msRemain = Math.floor((ms % 1000) / 10);
+    console.log(min, sec, msRemain);
+
+    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}.${String(msRemain).padStart(2, "0")}`;
+};
+
+function lapAverage() {
+    if (lapTimes.length === 0) {
+        console.log("⚠️ No laps recorded yet.");
+        return "--:--.--"
+    }
+
+    const totalMs = lapTimes.reduce((acc, lap) => {
+        return acc + lap.ms;
+      }, 0); //! 👈 THIS is the initial value for the accumulator
+
+    const averageMS = totalMs / lapTimes.length
+    const formatted = msToTime(averageMS);
+
+    console.log("📊 Lap average:", formatted);
+    // return formatted;
+    
+    displayAverage.textContent = `${formatted}`;
+}
+lap
