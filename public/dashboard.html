@@ -14,20 +14,27 @@
 
     <main>
 
-        <!-- ! Pool size input -->
-        <section class="setup-pool-size">
+        <section class="user-info">
+        </section>
+        
+        <!-- ! Pool size input - User Input-->
+        <section class="setup-pool-size user-info">
+            <label for="user-input" class="user-name">User Name</label>
+            <input type="text" class="input-user-name" id="user-input" min="3" max="20" placeholder="Please type your name">
             <label for="pool-size" class="label-pool-size">Pool Size (meters)</label>
             <input class="input-pool-size" type="number" id="pool-size" min="1", placeholder="Please enter the pool size">
             <button class="start-button">Start Session</button>
         </section>
 
-        <!-- ! lap information -->
+        <!-- ! Current lap information -->
         <section class="setup-lap-info">
             <div class="lap-display hidden">
                 <h2 class="lap-counter">Lap 0</h2>
                 <div class="lap-time">--:--.--</div>
             </div>
         </section>
+
+        <!--! last Partial and last lap Information -->
         <section>
             <div class="partial-times">
                 <h3 class="last-partial">Last partial</h3>
@@ -36,13 +43,18 @@
                 <div class="display-last-lap">--:--.--</div>
             </div>
         </section>
+
+        <!--! Records -->
         <section>
-            <div class="partial-records">
-                <h3 class="fast-partial">Fast Lap</h3>
-                <h3 class="fast-lap"></h3>
-                <div class="display-record">--:--.--</div>
+            <div class="records">
+                <h3 class="fast-partial">Fast Partial</h3>
+                <div class="display-partial-record">--:--.--</div>
+                <h3 class="fast-lap">Fast Lap</h3>
+                <div class="display-lap-record">--:--.--</div>
             </div>
         </section>
+
+        <section>
             <div class="average-time">
                 <h3 class="average">Average</h3>
                 <div class="display-average">--:--.--</div>

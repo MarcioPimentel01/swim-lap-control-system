@@ -56,17 +56,17 @@ main {
     box-shadow: rgba(82, 109, 130, 0.9) 0px 30px 50px -12px inset, rgba(0, 0, 0, 1) 0px 18px 26px -18px inset;
 }
 
-.label-pool-size {
+.label-pool-size, .user-name {
     font-weight: 1000;
     font-size: 2rem;
     text-align: center;
-    margin: 22px auto;
+    margin: 5px auto;
 }
 
-.input-pool-size {
+.input-pool-size, .input-user-name {
     width: 220px;
     height: 45px;
-    margin: 17px auto;
+    margin: 8px auto;
     border: none;
     outline: none;
     padding: 0 6px;
