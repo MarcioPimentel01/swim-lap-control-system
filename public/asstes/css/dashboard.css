@@ -36,11 +36,14 @@ header {
 }
 
 main {
-    display: flex;
+    display: grid;
+    
+    grid: repeat(3, 1fr 1fr, 1fr);
     justify-content: space-around;
-    align-items: flex-start;
     margin: 3rem;
 }
+
+
 
 .setup-pool-size {
     display: flex;
