@@ -1,63 +1,119 @@
-# Swim Lap Control System
-This project is built around the versatile and affordable Raspberry Pi 4 Model B. The goal is to develop a hardware-software solution capable of reliably tracking swim laps in real-time. The Raspberry Pi 4 was chosen for its robust performance and connectivity features—it offers ample GPIO pins for sensor integration, multiple USB ports for debugging and accessories, and built-in Wi-Fi and Bluetooth for wireless syncing and remote control.
+# 🏊‍♂️ Swim Lap Control System (UWB-Powered)
 
-With its quad-core processor and generous memory options, the Pi 4 can simultaneously handle sensor input, display output, and data storage efficiently. This makes it an ideal core system to manage lap timing, user interface, and communication—all essential components of a responsive and user-friendly swim lap control system.
+**A real-time lap tracking system using Ultra-Wideband technology, Raspberry Pi, and custom wireless sensors.**
 
-# System Overview
-The Swim Lap Control System is designed to track and display lap times for swimmers in real-time. It uses a combination of wired and wireless touch sensors placed at opposite ends of the pool. Each time the swimmer completes a lap and touches one of the sensors, the system records a timestamp.
+---
 
-There are two key displays:
+## 🚀 Project Purpose
 
-Poolside Display – A large, wall-mounted LED clock that shows the current time and lap count. This display is visible from the pool and is updated live as the swimmer completes laps.
+This is not a bootcamp tutorial project.
 
-Control Display – A smaller, touch-enabled screen connected to the Raspberry Pi. This interface provides detailed data such as lap intervals, total swim time, and lap history. It also allows the user to start, pause, reset sessions, and configure settings.
+This is a **hardware-software hybrid**, designed to:
 
-The system supports both local control and remote access via Wi-Fi or Bluetooth, enabling easy data synchronization and analysis after each session.
+- Track swimmer laps with **real-time precision**
+- Utilize **Ultra-Wideband (UWB)** for accurate positioning
+- Be **portable and modular**, suitable for any pool length
+- Act as a **personal showcase project** for internship/job applications
 
-# Hardware Components
-**1. Core Controller Raspberry Pi 4 Model B**
-- Quad-core CPU
-- 2GB–8GB RAM (depending on needs)
-- Built-in Wi-Fi and Bluetooth
-- USB, HDMI, GPIO support
+> 🧠 Built from scratch by someone self-learning development, electronics, and embedded systems — all at once.
 
-**2. Lap Sensors**
-- Wired Sensor:
-- Capacitive or resistive touchpad (water-resistant)
-- Connected directly to GPIO pins
-- Wireless Sensor:
-- ESP32 or similar microcontroller with Wi-Fi/Bluetooth
-- Paired with a capacitive touch sensor module
-- Communicates with Raspberry Pi over wireless protocol (e.g., MQTT or HTTP)
+---
 
-**3. Displays**
+## 🧩 System Overview
 
-- Large Poolside Display:
-- Oversized 6-digit LED wall clock (modded or custom)
-- Displays current time and lap count
-- Controlled via serial or wireless communication from Pi
+The system detects when a swimmer reaches either end of the pool using UWB anchors and a **wrist-mounted tag**.
 
-    **Control Interface:**
-- 5" or 7" Raspberry Pi-compatible touch screen (HDMI or GPIO)
-- Mounted near the Pi for user interaction
+### Core Features:
 
-**4. Power Supply**
-- Reliable 5V/3A (or higher) USB-C power supply for Pi
-- Optional power banks or battery backups for wireless sensors
+- 📟 Real-time lap display on a **10.1” Raspberry Pi touchscreen**
+- 📡 **DWM1001-DEV UWB modules** (anchors + tag)
+- 🧠 Smart session tracking: lap count, partials, fastest lap, averages
+- 🔋 Battery-powered sensors + transportable layout
+- 📲 Future-ready: Bluetooth control, cloud sync, and mobile interface
 
-**5. Enclosures & Waterproofing**
+---
 
-- IP65+ enclosures for Raspberry Pi and touchpads
-- Waterproof casings for poolside display components
-- Anti-condensation measures for display visibility
+## 🧱 Hardware Components
 
-## Dependencies
+### 💻 Main Controller
 
-* `express` A fast, minimal web server framework for Node.js.
-You use it to build APIs, serve HTML pages, handle routes, etc.
-* `socket.io` Enables real-time, bi-directional communication between client and server via WebSockets (or fallback to long-polling).
-Perfect for live chat, real-time notifications, or live sensor data updates.
-* `onoff` Lets you control GPIO (General Purpose Input/Output) pins on a Raspberry Pi.
-You can turn LEDs on/off, detect button presses, etc.
-* `johnny-five` A JavaScript robotics and IoT library.
-Works with boards like Arduino and also supports Raspberry Pi (through a plugin like Raspi IO).
+- **Raspberry Pi 4 Model B (8GB)**
+- Fan-cooled case w/ 64GB preloaded SD card
+- 10.1” IPS Touchscreen (HDMI)
+- Powered via Anker PowerCore 10K battery
+
+### 📡 UWB Modules
+
+- **7× DWM1001-DEV Modules**
+  - 4 for anchors (2 each end of pool)
+  - 1 for wristband tag
+  - 1 connected to Raspberry Pi (gateway)
+  - 1 spare for development/testing
+
+### 🔋 Power + Connectivity
+
+- **Wristband Battery**: Qimoo 602025 3.7V LiPo (200mAh, JST PH2.0)
+- **Anchor Battery**: MakerFocus 3.7V 2000mAh LiPo (Micro JST 1.25)
+- **Charger Module**: HiLetgo TP4056 w/ protection (Micro USB, 10pcs)
+
+### 🛠 Accessories
+
+- Freenove Starter Kit (Raspberry Pi)
+- Soldering station (YIHUA 926 III)
+- Heat shrink tubing + jumper wires
+- JST connectors, breadboard, standoffs, toolkits
+- Waterproof/wearable wristband housing (TBD)
+
+---
+
+## 🔧 Software Stack
+
+### Frontend
+
+- HTML/CSS/JavaScript
+- Bootstrap 5
+- Real-time lap tracking UI
+
+### Backend
+
+- Node.js w/ `express`
+- `socket.io` for live updates
+- `onoff` and `johnny-five` for GPIO and sensor control (for future add-ons)
+
+---
+
+## 🧠 Future Milestones
+
+| Feature | Status       |
+|---------|--------------|
+| UWB-based positioning        | 🔄 In Progress |
+| Real-time wristband tracking | ⏳ Upcoming   |
+| Session record logs          | ✅ Done       |
+| Fastest lap detection        | ✅ Done       |
+| Bluetooth pairing            | ⏳ Upcoming   |
+| Public GitHub Pages UI       | ✅ Live       |
+| Job-ready portfolio          | 🔄 Building   |
+
+---
+
+## 📢 Why This Project?
+
+🧠 I wanted a **real, unique, and engineering-heavy** project to showcase my growth as a developer and problem solver.
+
+💼 I'm aiming to apply to the **Microsoft Leap Program**, internships, and jobs in embedded, IoT, and full-stack development.
+
+This project shows:
+
+- End-to-end system thinking
+- UI, backend, and hardware integration
+- Commitment to building something real and complex
+
+---
+
+## 📷 Media Coming Soon
+
+- Project photos and hardware setup
+- Wiring diagrams
+- Demo video with real-time lap tracking
+
+---
