@@ -2,8 +2,11 @@ console.log("Dashboard JS loaded ✅")
 
 const socket = io(); //! 👈 connects to the server
 
-const poolSizeInput = document.getElementById("pool-size");
-console.log("pool size input", poolSizeInput);
+const poolSizeSelect = document.getElementById("pool-size-select");
+console.log("pool size input", poolSizeSelect);
+
+const customPoolSize = document.getElementById("custom-pool-size");
+console.log("Custom input was added", customPoolSize);
 
 const startButton = document.querySelector(".start-button");
 console.log("Start Button", startButton);
@@ -45,23 +48,26 @@ let sessionRecords =[]; //? information stored for future user consult, even aft
 // ! wire up the Start Session button to detect when it’s clicked and grab the pool size input.
 
 startButton.addEventListener("click", () => {
-    const poolSize = Number(poolSizeInput.value);
-    console.log("Pool Size entered", poolSize);
-    
     
     // ! validation pool size
-    if (!poolSize || poolSize <= 0) {
-        alert("Please enter a valid pool size greater than 0.");
+    let poolSize;
+
+    if (poolSizeSelect.value === "custom") {
+        poolSize = Number(customPoolSize.value);
+    
+        if (!poolSize || poolSize <= 0) {
+        alert("Please insert a number bigger than 0.");
         return;
+        }
+    } else {
+        poolSize = Number(poolSizeSelect.value);
     }
-    console.log("✅ Valid pool size was added", poolSize);
-
-
+    
     //! remove and add values after function validation
     
-    const setupSection = document.querySelector(".setup-pool-size")
-    setupSection.classList.add("hidden");
-    console.log("👋 Hiding setup section:", setupSection);
+    // const setUpPoolSize = document.querySelector("pool-size-select")
+    poolSizeSelect.classList.add("hidden");
+    console.log("👋 Hiding setup section:", poolSizeSelect);
 
     const lapDisplay = document.querySelector(".lap-display");
     lapDisplay.classList.remove("hidden");
