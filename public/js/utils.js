@@ -1,3 +1,20 @@
+function validatePoolSize() {
+        let poolSize;
+        if (poolSizeSelect.value === "custom") {
+            poolSize = Number(customPoolSize.value)
+            if (!poolSize || poolSize <= 0) {
+                alert("Please add a number bigger than 0");
+                return null;
+            }
+        } else {
+            poolSize = Number(poolSizeSelect.value)
+        }
+        return poolSize;
+    }
+
+
+
+
 function msToTime(ms) {
     const min = Math.floor(ms / 60000);
     const sec = Math.floor((ms % 60000) / 1000);

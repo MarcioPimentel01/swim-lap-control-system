@@ -38,41 +38,29 @@ let sessionRecords = []; //? information stored for future user consult, even af
 
 // ?? Transforming the code into modular sections.
 // TODO Sections roadmap for now.
-    //TODO [] startSession
+    //TODO [x] startSession
     //TODO [] stoptSession
     //TODO [] resetSession
     //TODO [] storeSession
 
-
-
-// ! wire up the Start Session button to detect when it’s clicked and grab the pool size input.
-startButton.addEventListener("click", () => {
+    function startSession() {
+        startButton.addEventListener("click", () => {
     
-    // ! validation pool size
-    let poolSize;
-
-    if (poolSizeSelect.value === "custom") {
-        poolSize = Number(customPoolSize.value);
+            const poolSizeValid = validatePoolSize();
+            if (!poolSizeValid) return;
     
-        if (!poolSize || poolSize <= 0) {
-        alert("Please insert a number bigger than 0.");
-        return;
-        }
-    } else {
-        poolSize = Number(poolSizeSelect.value);
+            // You can optionally use it now
+            console.log("Pool size confirmed:", poolSizeValid);
+    
+            poolSizeSelect.classList.add("hidden");
+            const lapDisplay = document.querySelector(".lap-display");
+            lapDisplay.classList.remove("hidden");
+    
+            lapsSimulation();
+        });
     }
     
-    //! remove and add values after function validation
-    poolSizeSelect.classList.add("hidden");
-    console.log("👋 Hiding setup section:", poolSizeSelect);
 
-    const lapDisplay = document.querySelector(".lap-display");
-    lapDisplay.classList.remove("hidden");
-    console.log("👋 Showing lap display:", lapDisplay);
-
-    lapsSimulation();
-
-});
 
 stopSession.addEventListener("click", () => {
     clearInterval(lapIntervalFinal);
@@ -177,17 +165,6 @@ function lapsSimulation() {
     }, 4000);
     
 }
-
-function generateFakeTime() {
-    const min = Math.floor(Math.random() * 2);
-    const sec = Math.floor(Math.random() * 60);
-    const ms = Math.floor(Math.random() * 100);
-
-    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}.${String(ms).padStart(2, "0")}`;
-
-
-};
-
 // function storeSessionRecords() {
 
 // };
