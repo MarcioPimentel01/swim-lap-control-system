@@ -23,27 +23,25 @@ console.log("Display lap time", lapTime);
 const stopSession = document.querySelector(".stop-session");
 console.log("Stop Session button", stopSession);
 
-const displayLastPartial = document.querySelector(".display-last-partial")
+const displayLastPartial = document.querySelector(".display-last-partial");
 console.log("Logs every last partial", displayLastPartial);
 
 const displayLastLap = document.querySelector(".display-last-lap");
 console.log("Display always the last lap", displayLastLap);
 
-const displayAverage = document.querySelector(".display-average")
-console.log("Display the average of all laps inside the lapTimes[]", displayAverage)
+const displayAverage = document.querySelector(".display-average");
+console.log("Display the average of all laps inside the lapTimes[]", displayAverage);
 
-//! lap simulation
+const restoreSession = document,querySelector(".restore-session");
+console.log("Reset all information about last session", restoreSession)
 
 let lap = 0;
 let lapIntervalHalf = null;
 let lapIntervalFinal = null;
 let fastestLap = null;
 let fastPartial = null;
-// let lastPartial = null;
-
 
 //! storing the laps on local (in-memory)
-
 let partialTimes = []; //? information cleared after reset button
 let lapTimes = []; //? information cleared after reset button
 let sessionRecords =[]; //? information stored for future user consult, even after reset button
@@ -82,9 +80,14 @@ stopSession.addEventListener("click", () => {
     clearInterval(lapIntervalFinal);
     clearInterval(lapIntervalHalf);
     console.log("🛑 Simulation stopped.");
-});     
+});
 
+restoreSession.addEventListener("click", () => {
+    partialTimes.splice(0, partialTimes.length);
+    lapTimes.splice(0, lapTimes.length);
+});
 
+//! lap simulation - to be removed when modules UWB DWM1001 arrives
 function lapsSimulation() {
     lap = 0;
 
@@ -126,25 +129,38 @@ function lapsSimulation() {
         lap++;
         const raw = generateFakeTime();
         const ms = timeToMs(raw);
-        const lapObj = {raw, ms};
+        const lapObj = { raw, ms };
         lapTimes.push(lapObj);
         console.log("Fake lap times pushed to the array", lapTimes);
-
-        lapCounter.textContent = `Lap ${lap}`
+    
+        lapCounter.textContent = `Lap ${lap}`;
         lapTime.textContent = lapObj.raw;
-        displayLastLap.textContent = lapTimes[lapTimes.length - 1].raw;
-
-        if (fastestLap === null || ms < fastestLap) {
-            fastestLap = ms
-            document.querySelector(".display-record").textContent = raw
-            document.querySelector(".display-record").style.color = "lightgreen";
-
+        displayLastLap.textContent = raw;
+    
+        // 🟢 Lap comparison logic
+        if (lapTimes.length > 1) {
+            const previous = lapTimes[lapTimes.length - 2].ms;
+            if (ms < previous) {
+                displayLastLap.style.color = "lightgreen";
+            } else {
+                displayLastLap.style.color = "crimson";
+            }
+        } else {
+            displayLastLap.style.color = "inherit"; // First lap = neutral
         }
+    
+        // 🏁 Fastest lap record
+        if (fastestLap === null || ms < fastestLap) {
+            fastestLap = ms;
+            document.querySelector(".display-record").textContent = raw;
+            document.querySelector(".display-record").style.color = "lightgreen";
+        }
+    
         lapAverage();
-
-
+    
         console.log(`🏁 Lap ${lap} - Time: ${raw}`);
-    }, 4000);    
+    }, 4000);
+    
 }
 
 function generateFakeTime() {
@@ -156,8 +172,6 @@ function generateFakeTime() {
 
 
 };
-
-
 
 // function storeSessionRecords() {
 
@@ -207,3 +221,4 @@ function lapAverage() {
     
     displayAverage.textContent = `${formatted}`;
 }
+
