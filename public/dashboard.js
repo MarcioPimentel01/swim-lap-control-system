@@ -32,7 +32,7 @@ console.log("Display always the last lap", displayLastLap);
 const displayAverage = document.querySelector(".display-average");
 console.log("Display the average of all laps inside the lapTimes[]", displayAverage);
 
-const restoreSession = document,querySelector(".restore-session");
+const restoreSession = document.querySelector(".restore-session");
 console.log("Reset all information about last session", restoreSession)
 
 let lap = 0;
@@ -85,6 +85,25 @@ stopSession.addEventListener("click", () => {
 restoreSession.addEventListener("click", () => {
     partialTimes.splice(0, partialTimes.length);
     lapTimes.splice(0, lapTimes.length);
+
+    lapTime.textContent = "--:--.--"
+    displayLastLap.textContent = "--:--.--"
+    displayAverage.textContent = "--:--.--"
+    displayLastPartial.textContent = "--:--.--"
+    document.querySelector(".display-partial-record").textContent = "--:--.--";
+    document.querySelector(".display-record").textContent = "--:--.--";
+
+    //! Reset color scheme
+    displayLastPartial.style.color = "inherit";
+    displayLastLap.style.color = "inherit";
+
+    //! Reset fastest values
+    fastestLap = null;
+    fastPartial = null;
+
+    console.log("🔄 Session reset complete.");
+
+
 });
 
 //! lap simulation - to be removed when modules UWB DWM1001 arrives
