@@ -4,34 +4,24 @@ const socket = io(); //! 👈 connects to the server
 
 const poolSizeSelect = document.getElementById("pool-size-select");
 console.log("pool size input", poolSizeSelect);
-
 const customPoolSize = document.getElementById("custom-pool-size");
 console.log("Custom input was added", customPoolSize);
-
 const startButton = document.querySelector(".start-button");
 console.log("Start Button", startButton);
-
 const lapDisplay = document.querySelector(".lap-display");
 console.log("lap Display", lapDisplay);
-
 const lapCounter = document.querySelector(".lap-counter");
 console.log("Lap counter", lapCounter);
-
 const lapTime = document.querySelector(".lap-time");
 console.log("Display lap time", lapTime);
-
 const stopSession = document.querySelector(".stop-session");
 console.log("Stop Session button", stopSession);
-
 const displayLastPartial = document.querySelector(".display-last-partial");
 console.log("Logs every last partial", displayLastPartial);
-
 const displayLastLap = document.querySelector(".display-last-lap");
 console.log("Display always the last lap", displayLastLap);
-
 const displayAverage = document.querySelector(".display-average");
 console.log("Display the average of all laps inside the lapTimes[]", displayAverage);
-
 const restoreSession = document.querySelector(".restore-session");
 console.log("Reset all information about last session", restoreSession)
 
@@ -47,7 +37,6 @@ let lapTimes = []; //? information cleared after reset button
 let sessionRecords =[]; //? information stored for future user consult, even after reset button
 
 // ! wire up the Start Session button to detect when it’s clicked and grab the pool size input.
-
 startButton.addEventListener("click", () => {
     
     // ! validation pool size
@@ -102,8 +91,6 @@ restoreSession.addEventListener("click", () => {
     fastPartial = null;
 
     console.log("🔄 Session reset complete.");
-
-
 });
 
 //! lap simulation - to be removed when modules UWB DWM1001 arrives

@@ -23,6 +23,25 @@ This is a **hardware-software hybrid**, designed to:
 
 The system detects when a swimmer reaches either end of the pool using UWB anchors and a **wrist-mounted tag**.
 
+## 🧠 Core Logic
+
+### ⏱️ Time Formatting Functions
+Used to convert between display time and internal millisecond values for comparison.
+
+![msToTime](./public/asstes/img/milliseconds-to-time.png)
+![timeToMs](./public/asstes/img/time-to-%20milliseconds.png)
+
+### ⚙️ Backend Setup (server.js)
+Quick overview of the Express + Socket.IO setup:
+
+![server](./public/asstes/img/server-js-configuration.png)
+
+### 🧼 Reset Logic
+Session reset flow and UI cleanup:
+
+![reset](./public/asstes/img/timeInterval-eventListner.png)
+
+
 ### Core Features:
 
 - 📟 Real-time lap display on a **10.1” Raspberry Pi touchscreen**

@@ -8,8 +8,6 @@ const app = express(); //!This creates an instance of an Express app, kind of li
 
 app.use(express.static("public"));
 
-
-
 //? requiring socketIO - fast communication for sensors
 
 const http = require("http");
