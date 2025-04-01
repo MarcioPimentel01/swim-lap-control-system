@@ -38,6 +38,9 @@ let lap = 0;
 let lapIntervalHalf = null;
 let lapIntervalFinal = null;
 let fastestLap = null;
+let fastPartial = null;
+// let lastPartial = null;
+
 
 //! storing the laps on local (in-memory)
 
@@ -64,8 +67,6 @@ startButton.addEventListener("click", () => {
     }
     
     //! remove and add values after function validation
-    
-    // const setUpPoolSize = document.querySelector("pool-size-select")
     poolSizeSelect.classList.add("hidden");
     console.log("👋 Hiding setup section:", poolSizeSelect);
 
@@ -89,14 +90,36 @@ function lapsSimulation() {
 
     lapIntervalHalf = setInterval(() => {
         console.log(`⏱️ Partial (half-lap) triggered`);
-
-        const partialTime = generateFakeTime();
-        partialTimes.push(partialTime);
-        console.log("📥 Partial Times:", partialTimes);
-
-        displayLastPartial.textContent = partialTimes[partialTimes.length - 1];
-
+    
+        const raw = generateFakeTime();
+        const ms = timeToMs(raw);
+        const partialObj = { raw, ms };
+        partialTimes.push(partialObj);
+        console.log("Fast Partial entry ok", partialObj);
+    
+        displayLastPartial.textContent = raw;
+    
+        //! Check if this is not the first partial
+        if (partialTimes.length > 1) {
+            const previous = partialTimes[partialTimes.length - 2].ms;
+    
+            if (ms < previous) {
+                displayLastPartial.style.color = "lightgreen";
+            } else {
+                displayLastPartial.style.color = "crimson";
+            }
+        } else {
+            //! First partial → neutral color
+            displayLastPartial.style.color = "inherit";
+        }
+    
+        if (fastPartial === null || ms < fastPartial) {
+            fastPartial = ms;
+            document.querySelector(".display-partial-record").textContent = raw;
+            document.querySelector(".display-partial-record").style.color = "lightgreen";
+        }
     }, 2000);
+    
 
 
     lapIntervalFinal = setInterval(() => {
@@ -111,21 +134,17 @@ function lapsSimulation() {
         lapTime.textContent = lapObj.raw;
         displayLastLap.textContent = lapTimes[lapTimes.length - 1].raw;
 
-        lapAverage();
-
         if (fastestLap === null || ms < fastestLap) {
             fastestLap = ms
             document.querySelector(".display-record").textContent = raw
+            document.querySelector(".display-record").style.color = "lightgreen";
+
         }
+        lapAverage();
+
 
         console.log(`🏁 Lap ${lap} - Time: ${raw}`);
-    }, 4000);
-
-    stopSession.addEventListener("click", () => {
-        clearInterval(lapIntervalFinal);
-        clearInterval(lapIntervalHalf);
-        console.log("🛑 Simulation stopped.");
-    });      
+    }, 4000);    
 }
 
 function generateFakeTime() {
@@ -188,4 +207,3 @@ function lapAverage() {
     
     displayAverage.textContent = `${formatted}`;
 }
-lap
