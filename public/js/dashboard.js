@@ -34,7 +34,16 @@ let fastPartial = null;
 //! storing the laps on local (in-memory)
 let partialTimes = []; //? information cleared after reset button
 let lapTimes = []; //? information cleared after reset button
-let sessionRecords =[]; //? information stored for future user consult, even after reset button
+let sessionRecords = []; //? information stored for future user consult, even after reset button
+
+// ?? Transforming the code into modular sections.
+// TODO Sections roadmap for now.
+    //TODO [] startSession
+    //TODO [] stoptSession
+    //TODO [] resetSession
+    //TODO [] storeSession
+
+
 
 // ! wire up the Start Session button to detect when it’s clicked and grab the pool size input.
 startButton.addEventListener("click", () => {
@@ -183,48 +192,5 @@ function generateFakeTime() {
 
 // };
 
-//! destructuring lapTimes array into ms.
 
-function timeToMs(timeString) {
-    console.log("⏱️ Raw time string:", timeString);
-
-    const [minSec, ms]  = timeString.split(".");
-    console.log("🧩 After splitting by '.':", "minSec =", minSec, "| ms =", ms);
-
-    const [min, sec] = minSec.split(":");
-    console.log("🔍 After splitting by ':':", "min =", min, "| sec =", sec);
-
-    const totalMs = (Number(min) * 60 * 1000) + (Number(sec) * 1000) + Number(ms);
-    console.log("Total in ms", totalMs);
-
-    return totalMs;
-};
-
-function msToTime(ms) {
-    const min = Math.floor(ms / 60000);
-    const sec = Math.floor((ms % 60000) / 1000);
-    const msRemain = Math.floor((ms % 1000) / 10);
-    console.log(min, sec, msRemain);
-
-    return `${String(min).padStart(2, "0")}:${String(sec).padStart(2, "0")}.${String(msRemain).padStart(2, "0")}`;
-};
-
-function lapAverage() {
-    if (lapTimes.length === 0) {
-        console.log("⚠️ No laps recorded yet.");
-        return "--:--.--"
-    }
-
-    const totalMs = lapTimes.reduce((acc, lap) => {
-        return acc + lap.ms;
-      }, 0); //! 👈 THIS is the initial value for the accumulator
-
-    const averageMS = totalMs / lapTimes.length
-    const formatted = msToTime(averageMS);
-
-    console.log("📊 Lap average:", formatted);
-    // return formatted;
-    
-    displayAverage.textContent = `${formatted}`;
-}
 
