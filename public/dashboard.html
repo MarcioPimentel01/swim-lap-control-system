@@ -9,12 +9,37 @@
     <link rel="stylesheet" href="./assets/css/dashboard.css" />
 
     <!--! Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-</head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-DQvkBjpPgn7RC31MCQoOeC9TI2kdqa4+BSgNMNj8v77fdC77Kj5zpWFTJaaAoMbC" crossorigin="anonymous"></head>
 
 <body>
     <header class="bg-dark text-white text-center py-3">
-    <h1>Lap Tracker</h1>
+        <!--! Navbar Offcanvas -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">LAP TRACKER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDarkNavbar" aria-controls="offcanvasDarkNavbar" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar" aria-labelledby="offcanvasDarkNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasDarkNavbarLabel">User Settings</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Version</a>
+                </li>
+            </div>
+            </div>
+        </div>
+    </nav>
     </header>
 
     <main class="container mt-4">
@@ -42,9 +67,23 @@
                     <option value="50">50 meters</option>
                     <option value="custom">Other - type</option>
                 </select>
-
+                
                 <!--! Custom Pool Size Input -->
                 <input class="form-control mb-3 hidden" type="number" id="custom-pool-size" min="1" placeholder="Type custom pool size" />
+
+                <section class="swim-style-container">
+                    <div class="swim-style-selector bg-dark text-white p-3 rounded mb-4">
+                        <label for="swim-style-select" class="form-label text-white">Swim Style:</label>
+                        <select id="swim-style-select" class="form-select bg-dark text-white border-secondary">
+                        <option value="Freestyle" selected>Freestyle</option>
+                        <option value="Backstroke">Backstroke</option>
+                        <option value="Breaststroke">Breaststroke</option>
+                        <option value="Butterfly">Butterfly</option>
+                        <option value="Individual Medley">Individual Medley</option>
+                        </select>
+                    </div>
+                </section>
+        
 
                 <!--! Start Button -->
                 <button class="btn btn-primary start-button w-100">Start Session</button>
@@ -65,35 +104,35 @@
             <!--! Lap Display: Full width -->
                 <div class="col-12 mb-4">
                     <div class="lap-display card p-3 hidden">
-                        <h2 class="lap-counter">Lap 0</h2>
-                        <div class="lap-time">--:--.--</div>
+                        <h2 class="lap-counter bg-primary text-white p-3 rounded">Lap 0</h2>
+                        <div class="lap-time display-2">--:--.--</div>
                     </div>
                 </div>
                 
                 <!--! Left Half: Last Lap & Partial -->
                 <div class="col-md-6 mb-4">
                     <div class="card p-3">
-                        <h3 class="last-partial">Last Partial</h3>
-                        <div class="display-last-partial">--:--.--</div>
-                        <h3 class="last-lap mt-3">Last Lap</h3>
-                        <div class="display-last-lap">--:--.--</div>
+                        <h3 class="last-partial bg-dark text-white p-3 rounded">Last Partial</h3>
+                        <div class="display-last-partial display-3">--:--.--</div>
+                        <h3 class="last-lap bg-dark text-white p-3 rounded mt-3">Last Lap</h3>
+                        <div class="display-last-lap display-3">--:--.--</div>
                     </div>
                 </div>
                 
             <!--! Right Half: Records & Average -->
             <div class="col-md-6 mb-4">
                 <div class="card p-3">
-                    <h3 class="fast-partial">Fast Partial</h3>
-                    <div class="display-partial-record">--:--.--</div>
-                    <h3 class="fast-lap mt-3">Fast Lap</h3>
-                    <div class="display-record">--:--.--</div>
+                    <h3 class="fast-partial bg-dark text-white p-3 rounded">Fast Partial</h3>
+                    <div class="display-partial-record display-3">--:--.--</div>
+                    <h3 class="fast-lap bg-dark text-white p-3 rounded mt-3">Fast Lap</h3>
+                    <div class="display-record display-3">--:--.--</div>
                 </div>
             </div>
                 <!--! Lap Display: Full width -->
                 <div class="col-12 mb-4">
                     <div class="average-display card p-3 hidden">
-                            <h3 class="average mt-4">Average</h3>
-                            <div class="display-average">--:--.--</div>
+                            <h3 class="average mt-4 bg-success text-white p-3 rounded">Average</h3>
+                            <div class="display-average display-2">--:--.--</div>
                         </div>
                     </div>
             </div>
@@ -106,5 +145,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="./js/utils.js" ></script>
     <script src="./js/dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.4/dist/js/bootstrap.bundle.min.js" integrity="sha384-YUe2LzesAfftltw+PEaao2tjU/QATaW/rOitAq67e0CT0Zi2VVRL0oC4+gAaeBKu" crossorigin="anonymous"></script>
 </body>
 </html>

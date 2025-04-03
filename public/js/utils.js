@@ -1,3 +1,8 @@
+const poolSizeSelect = document.getElementById("pool-size-select");
+console.log("pool size input", poolSizeSelect);
+const customPoolSize = document.getElementById("custom-pool-size");
+console.log("Custom input was added", customPoolSize);
+
 function validatePoolSize() {
     let poolSize;
     if (poolSizeSelect.value === "custom") {
@@ -11,9 +16,6 @@ function validatePoolSize() {
     }
     return poolSize;
 }
-
-
-
 
 function msToTime(ms) {
 const min = Math.floor(ms / 60000);
