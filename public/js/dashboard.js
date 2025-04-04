@@ -50,9 +50,9 @@ document.addEventListener("DOMContentLoaded", () => {
         
         console.log("Pool size confirmed:", poolSizeValid);
         
-        poolSizeSelect.classList.add("hidden");
+        poolSizeSelect.classList.add("d-none");
         const lapDisplay = document.querySelector(".lap-display");
-        lapDisplay.classList.remove("hidden");
+        lapDisplay.classList.remove("d-none");
         
         lapsSimulation();
     }
