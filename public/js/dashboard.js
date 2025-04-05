@@ -1,8 +1,13 @@
 console.log("Dashboard JS loaded ✅")
 
 const socket = io(); //! 👈 connects to the server
+console.log("Socket connected", socket);
+
+import { initPasswordVisibilityToggle } from './utils-html.js';
+
 
 document.addEventListener("DOMContentLoaded", () => {
+    initPasswordVisibilityToggle();
     const poolSizeSelect = document.getElementById("pool-size-select");
     console.log("pool size input", poolSizeSelect);
     const customPoolSize = document.getElementById("custom-pool-size");
