@@ -50,16 +50,19 @@ document.addEventListener("DOMContentLoaded", () => {
     //TODO [] storeSession
     
     const startSession = () => {
+
         const poolSizeValid = validatePoolSize();
         if (!poolSizeValid) return;
+            console.log("Pool size confirmed:", poolSizeValid);
+        if (poolSizeValid === true) {
+            
+            poolSizeSelect.classList.add("d-none");
+            const lapDisplay = document.querySelector(".lap-display");
+            lapDisplay.classList.remove("d-none");
+            
+            lapsSimulation();
+        }
         
-        console.log("Pool size confirmed:", poolSizeValid);
-        
-        poolSizeSelect.classList.add("d-none");
-        const lapDisplay = document.querySelector(".lap-display");
-        lapDisplay.classList.remove("d-none");
-        
-        lapsSimulation();
     }
     
     const stopSession = () => {
