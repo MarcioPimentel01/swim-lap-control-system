@@ -1,4 +1,5 @@
-# 🏊‍♂️ Swim Lap Control System (UWB-Powered)
+# 🏊‍♂️ Swim Lap Control System (UWB-Powered) ![Swim Tracker Status](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/MarcioPimentel01/swim-lap-control-system/main/badge-status.json&style=for-the-badge)
+
 
 **A real-time lap tracking system using Ultra-Wideband technology, Raspberry Pi, and custom wireless sensors.**
 
