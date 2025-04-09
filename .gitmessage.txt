@@ -1,0 +1,12 @@
+# Title: concise and clear summary (max 50 characters)
+✨ Improve: Pool size selection UI and validation
+
+# Body: detailed explanations
+- Added event listener to 'pool-size-select' for real-time UI updates 🎯
+- Custom pool size field now appears only when 'Custom' is selected
+- Cleaned up logic in 'validatePoolSize' for better readability ✅
+- User flow improved: no need to manually manage visibility
+- Prepares codebase for future UX enhancements 🚀 🔥
+
+# Footer: optional ticket or reference
+# (leave empty or use something like "Refs: #123")
