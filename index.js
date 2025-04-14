@@ -1,53 +1,83 @@
+// Required libraries
 const { SerialPort } = require('serialport');
 const { ReadlineParser } = require('@serialport/parser-readline');
+const rpio = require('rpio');
 
-// Adjust your serial path
-const port = new SerialPort({
-  path: '/dev/ttyACM0',
-  baudRate: 115200,
-});
+// Set pin mapping to physical
+rpio.init({ mapping: 'physical' });
 
-// Optional: parser for line-based response (depends on module behavior)
-const parser = port.pipe(new ReadlineParser({ delimiter: '\r\n' }));
+// Define constants
+const resetPin = 11; // Pi physical pin 11 = GPIO17
 
-port.on('open', () => {
-  console.log('✅ Serial port opened');
+// Open the reset pin
+rpio.open(resetPin, rpio.OUTPUT, rpio.HIGH); // Start high (inactive)
 
-  // Step 1: Wake up module
-  const wakeUpByte = Buffer.from([0xFF]);
-  port.write(wakeUpByte, (err) => {
-    if (err) {
-      return console.error('❌ Error sending wake-up byte:', err.message);
-    }
-    console.log('💡 Wake-up byte sent');
+// Main function
+function hardwareReset() {
+  console.log('🔄 Resetting module...');
+  rpio.write(resetPin, rpio.LOW);
 
-    // Wait a bit for module to be fully awake
-    setTimeout(sendGetFirmwareCommand, 1000); // 1000ms delay
+  setTimeout(() => {
+    rpio.write(resetPin, rpio.HIGH);
+    console.log('✅ Reset pulse complete, continuing with serial communication...');
+    initializeSerialCommunication();
+  }, 100); // Hold reset low for 100 ms
+}
+
+// Initialize UART communication
+function initializeSerialCommunication() {
+  console.log('⏳ Initializing serial communication...');
+
+  const port = new SerialPort({
+    path: '/dev/ttyS0', // Using Pi GPIO UART
+    baudRate: 115200,
   });
-});
 
-function sendGetFirmwareCommand() {
-  // ✅ Update: Add the correct TLV frame (command + payload length)
+  const parser = port.pipe(new ReadlineParser({ delimiter: '\n' }));
+
+  port.on('open', () => {
+    console.log('✅ Serial port opened');
+
+    port.flush((err) => {
+      if (err) {
+        console.error('❌ Error flushing port:', err.message);
+        return;
+      }
+      console.log('🧹 Serial port flushed');
+
+      // Important: Longer delay to let module boot up
+      setTimeout(() => {
+        sendGetFirmwareCommand(port);
+      }, 3000); // Wait 3 seconds after reset
+    });
+  });
+
+  port.on('data', (data) => {
+    console.log('📥 Serial Data (hex):', data.toString('hex'));
+    console.log('📥 Serial Data (ascii):', data.toString('ascii').trim());
+  });
+
+  parser.on('data', (data) => {
+    console.log('📥 Parser Data (text):', data.trim());
+  });
+
+  port.on('error', (err) => {
+    console.error('❌ Serial port error:', err.message);
+  });
+}
+
+// Send firmware version command
+function sendGetFirmwareCommand(port) {
   const GET_FIRMWARE_VERSION_COMMAND = Buffer.from([0x0D, 0x00]);
 
   port.write(GET_FIRMWARE_VERSION_COMMAND, (err) => {
     if (err) {
-      return console.error('❌ Error sending command:', err.message);
+      console.error('❌ Error sending command:', err.message);
+      return;
     }
     console.log('🚀 Get firmware version command sent');
   });
 }
 
-// Step 3: Read incoming data
-parser.on('data', (data) => {
-  console.log('📥 Data received (text):', data);
-});
-
-// ✅ Update: Add raw hex data logging
-port.on('data', (data) => {
-  console.log('📥 Raw Data (hex):', data.toString('hex'));
-});
-
-port.on('error', (err) => {
-  console.error('❌ Serial port error:', err.message);
-});
+// Start process
+hardwareReset();
