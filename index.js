@@ -29,7 +29,7 @@ function initializeSerialCommunication() {
   console.log('⏳ Initializing serial communication...');
 
   const port = new SerialPort({
-    path: '/dev/ttyS0', // Using Pi GPIO UART
+    path: '/dev/ttyACM0', // Using Pi GPIO UART
     baudRate: 115200,
   });
 
