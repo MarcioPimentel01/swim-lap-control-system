@@ -1,249 +1,117 @@
-# hardware-debug.md
+# 🧰 hardware-debug.md
 
-## Full Breakdown: DWM1001, UART, Raspberry Pi, and Firmware Flashing Debugging Journey
+## Full Breakdown: DWM1001, UART, SPI, Raspberry Pi, and Firmware Flashing Journey
+
+---
 
 ### 📍 1. Initial Setup
 
 We started with:
-- ✅ Raspberry Pi 4 Model B Rev 1.5
+- ✅ Raspberry Pi 4 Model B Rev 1.5  
 - ✅ DWM1001C module on the DWM1001-DEV board
 
-The goal was: **connect the Pi to the DWM1001 over UART to send commands and receive data.**
-
-**Challenge:**  
-The DWM1001C comes from the factory **blank** — no firmware.
-
-This means:
-- Board powers up ✅
-- But the microcontroller inside has no instructions ("brain") to operate ❌
-
-Without firmware, it cannot:
-- Respond to UART
-- Light up status LEDs properly
-- Perform UWB positioning
-
-So, the mission was something I had never done before: **install the firmware to "wake up" the board.**
+The original goal was: **connect the Pi to the DWM1001 over UART** to send commands and receive data.  
+After running into limitations with UART shell access in production firmware, we pivoted to **SPI-based communication** for faster and more robust control.
 
 ---
 
 ### 📍 2. Power & Communication Lines
 
-The Pi was providing:
-- ✅ Power (5V from Pi or USB) — I tested both.
-- ✅ Data lines:
-  - TX → Module RX
-  - RX → Module TX
-  - GND common
+#### 🔌 Current SPI Wiring
 
-We confirmed:
-- The wiring was perfect.
-- The Pi UART was configured (`/dev/ttyS0` active).
-- We tested with `cat /dev/ttyS0` — clean, no kernel errors.
-- Reset pulse from Pi **GPIO pin 11** works (`rpio` version ^2.4.2).
+| Signal       | Pi Pin        | DWM1001 Pin | Color Used   | Notes                              |
+|--------------|---------------|-------------|--------------|------------------------------------|
+| **VCC**      | Pin 2 (5V)     | Pin 1       | 🔴 Red        | Module accepts 5V safely           |
+| **GND**      | Pin 6          | Pin 2       | ⚫ Black      | Shared ground                      |
+| **MOSI**     | Pin 19 (GPIO10)| Pin 24      | 🟡 Yellow     | Pi → DWM1001 (data out)            |
+| **MISO**     | Pin 21 (GPIO9) | Pin 25      | 🟢 Green      | DWM1001 → Pi (data in)             |
+| **SCLK**     | Pin 23 (GPIO11)| Pin 23      | 🟠 Orange     | SPI Clock signal                   |
+| **CS (CE0)** | Pin 24 (GPIO8) | Pin 26      | 🟤 Brown      | Chip Select                        |
+| **Reset**    | Pin 11 (GPIO17)| Reset       | Custom        | Optional reset line via GPIO       |
 
-**Conclusion:** ✅ Hardware link Pi ⇄ Module is good.
-
----
-
-### 📍 3. Debugging UART Detection
-
-At first, I didn’t see any data:
-- Normal — the module was empty (factory blank).
-
-So, I checked:
-- Raspberry Pi UART enabled ✅
-- Power is stable ✅
-- RX/TX wiring is crossed properly ✅
-- Reset pulse confirmed ✅
-
-**Result:** No data yet, because **no firmware installed**.
+- ✅ SPI enabled via `raspi-config`
+- ✅ `/dev/spidev0.0` is available
+- ✅ Bluetooth re-enabled (for wireless keyboard)
 
 ---
 
-### 📍 4. Flashing Firmware (Critical Moment)
+### 📍 3. Firmware Flashing (Completed)
 
-Following `DWM1001-Firmware-User-Guide.pdf`, I successfully installed:
-- SEGGER J-Link tools on Raspberry Pi
-- Connected DWM1001-DEV via Micro-USB (the board has onboard J-Link debugger)
+Using the official **PANS R2.0 firmware**, we flashed the DWM1001 with:
 
-The following script was prepared:
+```bash
+JLinkExe -CommanderScript flash.jlink
 
-```jlink
 device nrf52
 speed 1000
 if swd
 r
-loadfile /home/admin/Downloads/DWM1001_DWM1001-DEV_MDEK1001_Sources_and_Docs_v11/DWM1001/Factory_Firmware_Image/DWM1001_PANS_R2.0.hex
+loadfile /path/to/DWM1001_PANS_R2.0.hex
 r
 g
 exit
 ```
+---
 
-**Explanation:**
+### ✅ Firmware Flashing Result
 
-**device nrf52,** because the DWM1001C module has nRF52832 microcontroller inside.
-
-**speed 1000**
-➡️ What it does:
-This sets the speed of the SWD (Serial Wire Debug) interface to 1000 kHz = 1 MHz.
-
-SWD is how J-Link talks to the microcontroller.
-
-1000 kHz is a safe, fast speed. Reliable for stable flashing.
-
-**if swd**
-➡️ What it does:
-
-This tells J-Link:
-
-"Use SWD (Serial Wire Debug) interface, not JTAG."
-
-SWD = simpler, 2-wire protocol for programming/debugging ARM Cortex-M chips.
-
-Your module supports SWD, not full JTAG.
-
-✅ Result:
-Ensures correct physical connection type is used.
-
-**r**
-➡️ What it does:
-
-This sends a reset command to the target device before flashing.
-
-✅ Result:
-Makes sure the microcontroller is in a clean, ready-to-flash state.
-
-Think of this like: "Hey module, clear your memory and get ready."
-
-**loadfile**
-➡️ What it does:
-
-Just point to the ***.hex*** file, provided by the Qorvo
-/home/admin/Downloads/DWM1001_DWM1001-DEV_MDEK1001_Sources_and_Docs_v11/DWM1001/Factory_Firmware_Image/DWM1001_PANS_R2.0.hex
-
-✅ Result:
-The program reads your .hex file and writes it to the microcontroller’s flash memory.
-
-HEX file: is a standard format for flashing microcontrollers.
-It contains the machine code instructions (compiled firmware) the MCU will run.
-
-Finnaly **r** again to reset and but the module and **g** to "go" begins to execute the new firmware instructions.
-
-**Finally**
-
-Run:
-```bash
-JLinkExe -CommanderScript flash.jlink
-```
-
-✅ Result: **SUCCESSFUL flashing** of DWM1001 PANS firmware.
-
-At this point:
-- The microcontroller received instructions ("brain installed").
-- LEDs started blinking, indicating life.
-- Module began running **PANS mode** (Real-Time Location System — RTLS),.
-
-**BUT:**
-PANS mode is designed for production deployments.
-It:
-- ⚠️ Disables UART Shell by default.
-- Expects to communicate over UWB with other anchors/tags.
-- Waits for UWB radio network setup.
-- Does **not** listen to UART commands out of the box.
+- ✅ Firmware successfully flashed  
+- ✅ LEDs blinking — confirms module is alive and running PANS RTLS firmware
 
 ---
 
-### 📍 **5. Debugging Post-Flash Behavior**
+### 📍 4. UART Path (Paused)
 
-After flashing:
-- I tried `sudo cat /dev/ttyS0` ✅ (correct)
-- Also tried sending `"AT\r"` ✅ (correct)
-- UART was alive, commands sent, but no response.
+We initially wired and tested UART using:
 
-What we proved:
-- The commands are reaching the module (because the Pi "echoed" them back).
-- Module is not replying, because it’s not in **Shell mode**.
+- TX/RX crossed correctly
+- Reset pulse from GPIO17
+- `cat /dev/ttyS0` and `echo -e "AT\r"` to test communication
 
-This led me to conclude:
-- The module firmware is **working**, but it’s in **production mode**.
-- Production mode does not expose UART shell by default.
+🧠 UART commands were sent successfully, but:
 
----
+- ❌ No response from the module  
+- 📌 This is expected: **PANS RTLS firmware disables UART shell by default**
 
-### 📍 **6. Solution Path Identified**
-
-Next step:
-➡️ **Re-flash with firmware build that has UART Shell enabled.**
-
-This will:
-- Enable the **interactive command line over UART.**
-- Let me send commands like:
-```bash
-echo -e "AT\r" | sudo tee /dev/ttyS0
-```
-And receive:
-```
-[00] 00
-```
-
-- Let you configure the module:
-  - Set device role (anchor, tag)
-  - Query status
-  - Get firmware version
-  - Start UWB services
-  - And later, build advanced control scripts!
+⏸️ **UART development paused in favor of SPI communication.**
 
 ---
 
-## 🚀 Lessons Mastered
+### 📍 5. SPI Communication — Current Focus 🎯
 
-✅ **Understanding bootloader and firmware flashing**
-- I learned that microcontrollers ship blank or with factory firmware.
-- Flashing writes operational software into non-volatile memory.
+We're now using the **TLV API over SPI**, as described in the `DWM1001-API-Guide.pdf`.
 
-✅ **UART communication flow**
-- UART = universal asynchronous receiver transmitter.
-- TX/RX crossed wiring.
-- UART Shell is like a "terminal" for microcontrollers.
-- "AT" is a basic attention command (used since old modems).
+**Tools & Libraries:**
 
-✅ **Firmware roles:**
-- **PANS RTLS mode:** positioning, anchors, tags (default factory behavior).
-- **Shell mode:** development/debug, UART API enabled.
+- `spi-device` Node.js library on Raspberry Pi
+- TLV encoding (Type-Length-Value) for requests and responses
 
-✅ **Using professional tools**
-- SEGGER J-Link + Commander ✅
-- `cat /dev/ttyS0` ✅
-- Reset line control ✅
+**Test Commands:**
 
-✅ **Full flashing pipeline**
-- Download official firmware
-- Prepare command script
-- Flash and verify
-- Observe system LED codes
-
-✅ **Hardware-level debugging**
-- LED activity analysis
-- Pin state control (reset)
-- Communication tests (UART RX/TX, power)
+- `dwm_ver_get`
+- `dwm_pos_get`
+- `dwm_cfg_get`
 
 ---
 
-## 🧩 Where I stand now:
+### 📍 6. Summary of Current Status
 
-| Stage | Status |
-|-------|---------|
-| Hardware setup | ✅ Perfect |
-| UART wiring | ✅ Perfect |
-| Raspberry Pi UART setup | ✅ Ready |
-| Firmware flashed (PANS prod) | ✅ Done |
-| Module alive, booting | ✅ LEDs confirm |
-| UART shell access | ❌ Not yet (next step with new firmware) |
-| Ready for AT commands | ⏳ Almost! |
-| Next: Flash UART-enabled firmware | 🟢 IN PROGRESS (preparing for you!) |
+| Area                  | Status        |
+|-----------------------|---------------|
+| Power Wiring          | ✅ Done        |
+| UART Testing          | ⏸️ Paused       |
+| SPI Wiring            | ✅ Done        |
+| SPI Interface Enabled | ✅ Done        |
+| Bluetooth Keyboard    | ✅ Working     |
+| Firmware Flashed      | ✅ Done        |
+| SPI TLV Integration   | 🟢 Starting Now |
 
 ---
 
+### 🚀 Next Steps
 
+- [ ] Test SPI connection using Node.js  
+- [ ] Send and log `dwm_ver_get` response  
+- [ ] Build JS wrapper functions for TLV command flow  
 
-
+---
