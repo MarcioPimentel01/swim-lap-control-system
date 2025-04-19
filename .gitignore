@@ -1,3 +1,7 @@
+# ✅ Keep personal-firmware tracked (your custom code)
+# Do NOT ignore: sdk/personal-firmware/
+
+
 # Node modules
 node_modules/
 
@@ -22,3 +26,16 @@ Thumbs.db
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
+
+# Ignore build output
+*.o
+*.elf
+*.map
+*.bin
+*.hex
+*.out
+
+# Ignore SDK binaries and official SDK itself
+sdk-dwm1001/official-decawave-sdk/
+sdk/**/output/
+sdk/**/build/
