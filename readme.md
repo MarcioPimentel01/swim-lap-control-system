@@ -24,6 +24,10 @@ This is a **hardware-software hybrid**, designed to:
 
 The system detects when a swimmer reaches either end of the pool using UWB anchors and a **wrist-mounted tag**.
 
+## Project Diagram
+
+![project-diagram-svg](./public/asstes/img/project-diagram-svg.svg)
+
 ## 🧠 Core Logic
 
 ### ⏱️ Time Formatting Functions
