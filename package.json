@@ -1,6 +1,6 @@
 {
   "name": "swim-lap-control-system",
-  "version": "1.0.0",
+  "version": "0.1.0", 
   "description": "This project is built around the versatile and affordable Raspberry Pi 4 Model B. The goal is to develop a hardware-software solution capable of reliably tracking swim laps in real-time. The Raspberry Pi 4 was chosen for its robust performance and connectivity features—it offers ample GPIO pins for sensor integration, multiple USB ports for debugging and accessories, and built-in Wi-Fi and Bluetooth for wireless syncing and remote control.",
   "main": "index.js",
   "scripts": {
