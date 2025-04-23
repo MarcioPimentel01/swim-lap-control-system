@@ -1,137 +1,92 @@
-can I have this formatted as .md?
+# ✅ DWM1001 Flashing Guide — Factory Firmware (With or Without J-Link)
 
-## DWM1001 Firmware Compilation & HEX Generation Guide (Linux/Debian)
+This guide shows how to **restore the official Decawave firmware** to the DWM1001 module using either:
 
-This guide explains how to compile firmware for the DWM1001 module and generate a final `.hex` file using a Raspberry Pi running Debian.
+- A **J-Link programmer** (recommended)
+- A **compiled image + Raspberry Pi** (advanced users only)
 
----
-
-### 🧰 Setup Environment
-
-Install the necessary tools:
-```d
-sudo apt update
-sudo apt install binutils srecord
-```
-- `binutils`: Provides `objcopy`, used to convert `.bin` files to `.hex`
-- `srecord`: Provides `srec_cat`, used to merge multiple `.hex` files
-
-✅ sudo apt install binutils srecord
-This installs two toolkits:
-
-`binutils`
-A collection of binary tools.
-
-Most important for you: arm-none-eabi-objcopy
-→ Used to convert .bin files into .hex ***(Intel HEX format for flashing).***
-
-`srecord`
-A powerful tool for working with HEX and SREC files.
-
-You’ll use the srec_cat command from this package to merge multiple .hex files into one — just like mergehex.exe on Windows.
-
+> ⚠️ If you're just getting started, **use a J-Link**. It's the most reliable way to flash without building or debugging anything.
 
 ---
 
-### 📁 Recommended Folder Structure
+## 🧰 Option 1 — Using J-Link (RECOMMENDED)
 
-Create a base directory for all firmware-related files:
-```d
-mkdir -p ~/projects/dwm1001-firmware
-cd ~/projects/dwm1001-firmware
-```
-Place the unzipped SDK content here to keep your workspace organized and separate from other projects.
+This is the cleanest method using a verified `.hex` file from the official SDK.
 
----
+### Requirements
 
-### 📦 Unpack the DWM1001 On-Board Package
+- ✅ SEGGER J-Link (e.g., EDU Mini, Base, etc.)
+- ✅ `DWM1001_PANS_R2.0.hex` from:
+  - `~/DWM1001/Factory_Firmware_Image/DWM1001_PANS_R2.0.hex`
+- ✅ SEGGER J-Flash Lite tool (GUI)
+- ❌ Raspberry Pi **not required**
 
-Unzip the official Decawave package:
-```d
-unzip DWM1001_on_board_package_R2.0.zip -d ~/projects/dwm1001-firmware
-cd ~/projects/dwm1001-firmware
-```
-Expected folder structure:
-```
-dwm1001-firmware/
-├── examples/
-│   └── dwm-simple/
-├── recovery/
-│   ├── bootloader_s132.bin
-│   ├── dwm-core_fw1.bin
-│   └── s132_nrf52_3.0.0_softdevice.hex
-└── utilities/
-```
+### Hardware Setup
 
----
+1. Plug the J-Link into your PC.
+2. Connect it to the **SWD port** on the DWM1001-DEV board.
+3. Power the board via USB or regulated 3.3V/5V.
 
-### 🛠️ Build the Example Firmware (`dwm-simple`)
+### Flash Steps
 
-Launch SEGGER Embedded Studio (if installed):
-```d
-cd ~/segger_embedded_studio_*/bin
-./emStudio &
-```
-1. Open the `dwm-simple` project inside `~/projects/dwm1001-firmware/examples/dwm-simple/`
-2. Build the project
-3. Confirm that the binary output is generated at:
-   ```
-~/projects/dwm1001-firmware/examples/dwm-simple/Output/linker/dwm-simple_fw2.bin
-```
+1. Install [SEGGER J-Flash Lite](https://www.segger.com/downloads/jlink/)
+2. Open the tool and:
+   - **Device**: `nRF52832_xxAA`
+   - **Interface**: `SWD`
+   - **Speed**: leave default (e.g., 4000 kHz)
+   - **Target File**: `DWM1001_PANS_R2.0.hex`
+3. Click **Program Device**
+
+✅ After programming, your module will reboot into the official firmware.
 
 ---
 
-### ⚙️ Convert & Merge Firmware Files
+## 🧰 Option 2 — Using Raspberry Pi (Advanced Manual Method)
 
-Run the following in the `utilities` folder:
-```d
-cd ~/projects/dwm1001-firmware/utilities
+This method requires:
 
-# Convert .bin to .hex with address offsets
-arm-none-eabi-objcopy -I binary ../recovery/bootloader_s132.bin -O ihex bl.hex --change-addresses 0x1f000
-arm-none-eabi-objcopy -I binary ../recovery/dwm-core_fw1.bin -O ihex fw1.hex --change-addresses 0x22000
-arm-none-eabi-objcopy -I binary ../examples/dwm-simple/Output/linker/dwm-simple_fw2.bin -O ihex fw2.hex --change-addresses 0x44000
+- Linux tools: `binutils`, `srecord`
+- SEGGER Embedded Studio (for firmware compilation)
+- Access to original `.bin` files and Decawave SDK
+- Manual merging of:
+  - SoftDevice
+  - Bootloader
+  - Firmware Core (`fw1`)
+  - Application Firmware (`fw2`)
 
-# Merge softdevice, fw1, and fw2
-srec_cat \
-  ../recovery/s132_nrf52_3.0.0_softdevice.hex -Intel \
-  fw1.hex -Intel \
-  fw2.hex -Intel \
-  -o argo-out0.hex -Intel
+⚠️ It is **not possible** to flash `.hex` files via USB alone without a programmer. UART/USB cannot write to flash directly.
 
-# Merge bootloader with the above result
-srec_cat \
-  bl.hex -Intel \
-  argo-out0.hex -Intel \
-  -o dwm1001_dwm-simple.hex -Intel
-```
+This method is only for users building their **own firmware** and debugging at a deep level.
 
 ---
 
-### 🧹 Cleanup Temporary Files (Optional)
-```d
-rm bl.hex fw1.hex fw2.hex argo-out0.hex
-```
+## 🧪 What’s Inside the Official `.hex` File?
+
+- ✅ `SoftDevice` — Bluetooth stack
+- ✅ `Bootloader`
+- ✅ `Firmware Core` (`fw1`)
+- ✅ `User App` (`fw2`)
+- ✅ Shell Interface over UART (at `115200 baud`)
+
+After flashing, the module boots ready to use with PANS commands.
 
 ---
 
-### ✅ Final Output
+## 🧼 Summary
 
-Your final firmware file will be located at:
-```
-~/projects/dwm1001-firmware/utilities/dwm1001_dwm-simple.hex
-```
-
-This `.hex` file is ready to be flashed to the DWM1001 module using a J-Link or compatible programmer.
+| Option      | Needs J-Link? | Custom Build? | Recommended For              |
+|-------------|---------------|----------------|-------------------------------|
+| Option 1    | ✅ Yes         | ❌ No           | Beginners & Fast Setup        |
+| Option 2    | ❌ No          | ✅ Yes          | Developers writing their own firmware |
 
 ---
 
-### 📌 Notes
-- Ensure that SEGGER Embedded Studio is properly configured for Nordic devices.
-- You must build the example in SEGGER before converting and merging.
-- You can automate these steps using a shell script if needed.
+## 📌 Notes
+
+- If you **don't have a J-Link**, you'll be limited to reading data over UART — not flashing.
+- We strongly recommend buying a low-cost [J-Link EDU Mini](https://www.digikey.com/en/products/detail/segger-microcontroller-systems/8-08-91/7387472) for all flashing/debugging needs.
 
 ---
 
-Author: Marcio Pimentel  
-Last Updated: April 2025
+**Author**: Marcio Pimentel  
+**Last Updated**: April 2025
