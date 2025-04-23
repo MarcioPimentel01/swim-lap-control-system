@@ -1,1 +1,0 @@
-port.write("si\r");

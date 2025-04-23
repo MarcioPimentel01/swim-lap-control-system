@@ -26,25 +26,25 @@ The system detects when a swimmer reaches either end of the pool using UWB ancho
 
 ## Project Diagram
 
-![project-diagram-svg](./public/asstes/img/project-diagram-svg.svg)
+![project-diagram-svg](./public/assets/img/project-diagram-svg.svg)
 
 ## 🧠 Core Logic
 
 ### ⏱️ Time Formatting Functions
 Used to convert between display time and internal millisecond values for comparison.
 
-![msToTime](./public/asstes/img/milliseconds-to-time.png)
-![timeToMs](./public/asstes/img/time-to-%20milliseconds.png)
+![msToTime](./public/assets/img/milliseconds-to-time.png)
+![timeToMs](./public/assets/img/time-to-%20milliseconds.png)
 
 ### ⚙️ Backend Setup (server.js)
 Quick overview of the Express + Socket.IO setup:
 
-![server](./public/asstes/img/server-js-configuration.png)
+![server](./public/assets/img/server-js-configuration.png)
 
 ### 🧼 Reset Logic
 Session reset flow and UI cleanup:
 
-![reset](./public/asstes/img/timeInterval-eventListner.png)
+![reset](./public/assets/img/timeInterval-eventListner.png)
 
 
 ### Core Features:
@@ -134,10 +134,34 @@ This project shows:
 
 ---
 
-## 📷 Media Coming Soon
+## 📷 Media
 
 - Project photos and hardware setup
-- Wiring diagrams
-- Demo video with real-time lap tracking
+
+| SPI Wired             | UART Wired                                                                |
+| ----------------- | ------------------------------------------------------------------ |
+| ![Module SPI Wired](./public/assets/img/dwm1001-dev-spi-wired.png) | ![Module SPI Wired](./public/assets/img/dwm1001-dev-uart-wired.png) |
+
+| Anchor             |                                         |
+| ----------------- | ------------------------------------------------------------------ |
+| ![Module SPI Wired](./public/assets/img/anchor-waterproof-box.png) | ![Module SPI Wired](./public/assets/img/anchor-waterproof-box02.png) |
+- Wiring diagrams (coming...)
+- Demo video with real-time lap tracking (coming...)
 
 ---
+
+## ⚡ Quick Start
+
+```bash
+# 1. Clone the repo
+git clone https://github.com/MarcioPimentel01/swim-lap-control-system.git
+cd swim-lap-control-system
+
+# 2. Install dependencies
+npm install
+
+# 3. Run the backend server
+node server.js
+
+# 4. Open your browser at http://localhost:3000
+```
