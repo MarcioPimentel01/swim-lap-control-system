@@ -1,8 +1,13 @@
 // tools/inject-version.js
-const { version } = require('../../package.json');
+const { version } = require(`../../package.json`);
 const fs = require('fs');
 
-fs.writeFileSync('./src/version.js', `export const appVersion = "${version}";\n`);
+// import { readFileSync } from 'fs';
+
+// const { version } = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url)));
+// console.log('version')
+
+fs.writeFileSync('./version.js', `export const appVersion = "${version}";\n`);
 
 
 
